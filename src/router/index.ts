@@ -45,7 +45,7 @@ const routes: RouteObject[] = [
       menu: true,
       title: '考勤管理',
       icon: createElement(CopyOutlined),
-      auth: true
+      auth: false
     },
     children: [
       {
@@ -99,4 +99,4 @@ const routes: RouteObject[] = [
 
 const router = createBrowserRouter(routes)
 
-export default router
+export  {router,routes}
