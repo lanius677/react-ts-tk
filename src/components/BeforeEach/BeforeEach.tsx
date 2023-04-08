@@ -8,7 +8,7 @@
  const BeforeEach = (props:BeforeEachProps)=>{
   const location=useLocation()
   const matchs=matchRoutes(routes,location)
-  console.log(matchs)
+  // console.log(matchs)
   // if(Array.isArray(matchs)){
   //   const meta=matchs[matchs.length-1].route.meta
   //   if(meta?.auth){

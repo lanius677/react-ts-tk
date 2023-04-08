@@ -67,6 +67,8 @@ const usersSlice = createSlice({
 
 export const {updateToken,updateInfos,clearToken}=usersSlice.actions
 
+export {loginAction,infosAction}
+
 
 const reducer = usersSlice.reducer
 export default reducer
