@@ -45,7 +45,7 @@ const routes: RouteObject[] = [
       menu: true,
       title: '考勤管理',
       icon: createElement(CopyOutlined),
-      auth: false
+      auth: true
     },
     children: [
       {

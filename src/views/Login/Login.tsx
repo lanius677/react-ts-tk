@@ -30,30 +30,36 @@ const Login = () => {
 
   const token = useSelector((state: RootState) => state.users.token)
   const dispatch = useAppDispatch()
-  const handleLogin = () => {
-    dispatch(loginAction({ email: 'huangrong@imooc.com', pass: 'huangrong' })).then((action) => {
-      console.log(action)
+
+
+  const autoLogin = (values: User) => {
+    console.log('autoLogin:',values)
+    const { email, pass } = values
+    return () => {
+      form.setFieldsValue({ username: email, password: pass })
+      onFinish(values)
+    }
+
+  }
+
+
+  const onFinish = (values: User) => {
+    console.log('success:', values)
+    dispatch(loginAction(values)).then((action) => {
+      console.log('action:',action)
       const { errcode, token } = (action.payload as { [index: string]: unknown }).data as { [index: string]: string & number }
       if (errcode === 0) {
         dispatch(updateToken(token))
         message.success('登录成功')
+        navigate('/')
       } else {
-        message.success('登录失败')
+        message.error('登录失败')
 
       }
     })
   }
 
-  const autoLogin = (user: User) => {
-    return
-  }
-
-
-  const onFinish = (values: any) => {
-    console.log('success:', values)
-  }
-
-  const onFinishFailed = (values: any) => {
+  const onFinishFailed = ({ values }: { values: User }) => {
     console.log('fail::', values)
 
   }
@@ -83,11 +89,15 @@ const Login = () => {
         onFinishFailed={onFinishFailed}
         autoComplete="off"
         className={styles.main}
+        form={form}
       >
         <Form.Item
           label="用户名"
           name="username"
-          rules={[{ required: true, message: '请输入用户名' }]}
+          rules={[
+            { required: true, message: '请输入用户名' },
+            { type: 'email', message: '请输入正确的邮箱地址' }
+          ]}
         >
           <Input />
         </Form.Item>
@@ -113,17 +123,17 @@ const Login = () => {
 
       {/* 测试账号区域 */}
       <div className={styles.users}>
-        <Row gutter={20}>
+        <Row gutter={26}>
           {
             testUsers.map((v) => (
               <Col key={v.email} span={12}>
-              <h3>
-                测试账号:
-                <Button size='small' onClick={() => autoLogin({ email: v.email, pass: v.pass })}>快速登录</Button>
-              </h3>
-              <p>邮箱：{v.email}</p>
-              <p>密码：{v.pass}</p>
-            </Col>
+                <h3>
+                  测试账号:
+                  <Button size='small' onClick={autoLogin({ email: v.email, pass: v.pass })}>快速登录</Button>
+                </h3>
+                <p>邮箱：{v.email}</p>
+                <p>密码：{v.pass}</p>
+              </Col>
             ))
           }
         </Row>
