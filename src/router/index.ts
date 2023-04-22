@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { Navigate, createBrowserRouter } from 'react-router-dom';
 import { RouteObject } from 'react-router-dom';
 import { CopyOutlined, CalendarOutlined, WarningOutlined, FileAddOutlined, ScanOutlined } from '@ant-design/icons';
 
@@ -38,6 +38,10 @@ declare module 'react-router' {
 }
 
 const routes: RouteObject[] = [
+  {
+    path:'/',
+    element:createElement(Navigate,{to:'/sign'})
+  },
   {
     path: '/',
     element: createElement(BeforeEach,null,createElement(Home)),
