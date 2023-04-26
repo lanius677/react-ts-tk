@@ -1,4 +1,4 @@
-import styles from './Home.module.scss';
+import styles from '@/views/Home/Home.module.sass';
 import { Layout } from 'antd';
 import HomeHeader from '@/views/Home/components/HomeHeader'
 import HomeAside from '@/views/Home/components/HomeAside'
@@ -20,7 +20,7 @@ const Home = () => {
           </Sider>
           <Layout style={{ padding: '20px' }}>
             <HomeBreadCrumb></HomeBreadCrumb>
-            <Content>
+            <Content className={styles['home-main']}>
               <HomeMain></HomeMain>
             </Content>
           </Layout>

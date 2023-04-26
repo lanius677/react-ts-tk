@@ -24,7 +24,8 @@ declare module 'react-router' {
       title?: string,
       icon?: ReactNode,
       auth?: boolean
-    }
+    },
+    name?: string
   }
 
   interface NonIndexRouteObject {
@@ -33,18 +34,21 @@ declare module 'react-router' {
       title?: string,
       icon?: ReactNode,
       auth?: boolean
-    }
+    },
+    name?: string
+
   }
 }
 
 const routes: RouteObject[] = [
   {
-    path:'/',
-    element:createElement(Navigate,{to:'/sign'})
+    path: '/',
+    element: createElement(Navigate, { to: '/sign' })
   },
   {
     path: '/',
-    element: createElement(BeforeEach,null,createElement(Home)),
+    name: 'home',
+    element: createElement(BeforeEach, null, createElement(Home)),
     meta: {
       menu: true,
       title: '考勤管理',
@@ -54,6 +58,7 @@ const routes: RouteObject[] = [
     children: [
       {
         path: 'apply',
+        name: 'apply',
         element: createElement(Apply),
         meta: {
           menu: true,
@@ -64,6 +69,7 @@ const routes: RouteObject[] = [
       },
       {
         path: 'check',
+        name: 'check',
         element: createElement(Check),
         meta: {
           menu: true,
@@ -74,6 +80,7 @@ const routes: RouteObject[] = [
       },
       {
         path: 'sign',
+        name: 'sign',
         element: createElement(Sign),
         meta: {
           menu: true,
@@ -84,6 +91,7 @@ const routes: RouteObject[] = [
       },
       {
         path: 'exception',
+        name: 'exception',
         element: createElement(Exception),
         meta: {
           menu: true,
@@ -96,11 +104,11 @@ const routes: RouteObject[] = [
   },
   {
     path: 'login',
-    element: createElement(BeforeEach,null,createElement(Login)),
+    element: createElement(BeforeEach, null, createElement(Login)),
 
   },
 ]
 
 const router = createBrowserRouter(routes)
 
-export  {router,routes}
+export { router, routes }

@@ -1,8 +1,21 @@
 import React from 'react'
+import styles from '@/views/Home/Home.module.sass'
+import { Breadcrumb } from 'antd'
 
 const HomeBreadCrumb = () => {
   return (
-    <div>HomeBreadCrumb</div>
+    <div>
+      <Breadcrumb className={styles['home-breadcrumb']}
+        items={[
+          {
+            title: 'Home',
+          },
+          {
+            title: 'An Application',
+          },
+        ]}
+      />
+    </div>
   )
 }
 
