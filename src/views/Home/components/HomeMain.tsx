@@ -7,7 +7,6 @@ const HomeMain = () => {
   return (
     <div>
       <Suspense>
-        HomeMain
         <Outlet></Outlet>
       </Suspense>
     </div>

@@ -1,13 +1,33 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import style from '@/views/Home/Home.module.sass'
 import classNames from 'classnames'
 
 import type { MenuProps } from 'antd';
 import { Dropdown, Badge, Space, Avatar } from 'antd';
 import { BellTwoTone } from '@ant-design/icons'
+import { useSelector } from 'react-redux';
+import { RootState, useAppDispatch } from '@/store';
+import { clearToken } from '@/store/modules/users';
+import { useNavigate } from 'react-router-dom';
 
 
 const HomeHeader = () => {
+
+  // 获取用户name和头像
+  const name = useSelector((state:RootState)=>state.users.infos.name) as ReactNode
+  const header = useSelector((state:RootState)=>state.users.infos)
+  // console.log('header',header)
+
+  // 用户登出
+  const dispatch=useAppDispatch()
+  const navigate=useNavigate()
+  const handleLogout=()=>{
+    dispatch(clearToken())
+    setTimeout(()=>{
+      navigate('/login')
+  })
+}
+
   const items1: MenuProps['items'] = [
     {
       key: '1',
@@ -28,7 +48,7 @@ const HomeHeader = () => {
     {
       key: '2',
       label: (
-        <span>退出</span>
+        <span onClick={handleLogout}>退出</span>
       ),
     },
   ]
@@ -53,7 +73,8 @@ const HomeHeader = () => {
         </Dropdown>
         <Dropdown menu={{ items: items2 }} className={style['home-header-bell']} arrow placement="bottom">
           <Space>
-            admin <Avatar src={<img src='https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg' alt="avatar" />} />
+            {name}
+             <Avatar src={<img src='https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg' alt="avatar" />} />
           </Space>
         </Dropdown>
       </div>
