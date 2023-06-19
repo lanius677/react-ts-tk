@@ -66,8 +66,8 @@ const HomeAside = () => {
       <Menu
         onClick={onClick}
         className={styles['home-aside']}
-        defaultSelectedKeys={[path]}
-        defaultOpenKeys={[subPath]}
+        selectedKeys={[path]}
+        openKeys={[subPath]}
         mode="inline"
         items={items}
       />

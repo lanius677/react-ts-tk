@@ -46,7 +46,7 @@ const Login = () => {
   const onFinish = (values: User) => {
     console.log('success:', values)
     dispatch(loginAction(values)).then((action) => {
-      console.log('action:',action)
+      // console.log('action:',action)
       const { errcode, token } = (action.payload as { [index: string]: unknown }).data as { [index: string]: string & number }
       if (errcode === 0) {
         dispatch(updateToken(token))

@@ -1,6 +1,7 @@
 import {configureStore,getDefaultMiddleware  } from '@reduxjs/toolkit'
 
 import usersReducer from './modules/users';
+import signsReducer from './modules/signs';
 
 import {
   persistStore,
@@ -27,7 +28,8 @@ const persistConfig = {
 const store = configureStore({
   reducer:{
     // 注册子模块
-    users:persistReducer(persistConfig,usersReducer)
+    users:persistReducer(persistConfig,usersReducer),
+    signs:signsReducer
   },
   middleware:getDefaultMiddleware({
     // serializableCheck: {
