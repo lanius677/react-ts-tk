@@ -43,13 +43,6 @@ const Sign = () => {
   const [dateilValue, setDateilValue] = useState({ ...originDateilValue })
   const [detailState, setDetailState] = useState({ ...originDetailState })
 
-  useEffect(() => {
-    if (signsInfos.detail) {
-
-    }
-  }, [])
-
-
 
   // 获取共享状态信息
   const signsInfos = useSelector((state: RootState) => state.signs.infos)
@@ -105,6 +98,56 @@ const Sign = () => {
       <div>{ret}</div>
     )
   }
+
+
+  // 列表渲染
+  useEffect(() => {
+    // console.log(signsInfos.detail)
+    if (signsInfos.detail) {
+      const detailMonth = (signsInfos.detail as { [index: string]: unknown })[toZero(months + 1)] as { [index: string]: unknown }
+      // console.log('detailMonth',detailMonth) 
+      for (let attr in detailMonth) {
+        switch (detailMonth[attr]) {
+          case DetailKey.normal:
+            originDateilValue.normal++
+            break;
+          case DetailKey.absent:
+            originDateilValue.absent++
+            break;
+          case DetailKey.early:
+            originDateilValue.early++
+            break;
+          case DetailKey.late:
+            originDateilValue.late++
+            break;
+          case DetailKey.lateAndEarly:
+            originDateilValue.lateAndEarly++
+            break;
+          case DetailKey.miss:
+            originDateilValue.miss++
+            break;
+        }
+      }
+      setDateilValue({ ...originDateilValue })
+      for (let attr in originDateilValue) {
+        if (attr !== 'normal' && originDateilValue[attr as keyof typeof originDateilValue] !== 0) {
+          setDetailState({
+            type: 'error',
+            text: '异常'
+          })
+        }
+      }
+    }
+    return () => { // 更新前触发或销毁的时候
+      setDetailState({
+        type: 'success',
+        text: '正常'
+      })
+      for (let attr in originDateilValue) {
+        originDateilValue[attr as keyof typeof originDateilValue] = 0
+      }
+    }
+  }, [months, signsInfos])
 
   // 打卡签到功能
   const handlePutTime = () => {
