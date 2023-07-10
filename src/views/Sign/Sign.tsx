@@ -72,7 +72,7 @@ const Sign = () => {
 
   const navigate = useNavigate()
   const hadnleToException = () => {
-    navigate('/exception')
+    navigate(`/exception?month=${months+1}`)
   }
 
   // const arrTest = Object.entries(DetailKey)
