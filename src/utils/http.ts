@@ -6,7 +6,7 @@ import { message } from 'antd';
 
 const instance = axios.create({
   baseURL: 'http://api.h5ke.top/',
-  timeout: 5000
+  timeout: 10000
 });
 
 instance.interceptors.request.use(function (config) {

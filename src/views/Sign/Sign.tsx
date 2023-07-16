@@ -102,10 +102,10 @@ const Sign = () => {
 
   // 列表渲染
   useEffect(() => {
-    // console.log(signsInfos.detail)
+    // console.log('signsInfos.detail',signsInfos.detail)
     if (signsInfos.detail) {
       const detailMonth = (signsInfos.detail as { [index: string]: unknown })[toZero(months + 1)] as { [index: string]: unknown }
-      // console.log('detailMonth',detailMonth) 
+      console.log('detailMonth',detailMonth) 
       for (let attr in detailMonth) {
         switch (detailMonth[attr]) {
           case DetailKey.normal:

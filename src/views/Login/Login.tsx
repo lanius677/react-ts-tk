@@ -49,8 +49,8 @@ const Login = () => {
       // console.log('action:',action)
       const { errcode, token } = (action.payload as { [index: string]: unknown }).data as { [index: string]: string & number }
       if (errcode === 0) {
-        dispatch(updateToken(token))
         message.success('登录成功')
+        dispatch(updateToken(token))
         navigate('/')
       } else {
         message.error('登录失败')
@@ -60,7 +60,7 @@ const Login = () => {
   }
 
   const onFinishFailed = ({ values }: { values: User }) => {
-    console.log('fail::', values)
+    console.log('fail:', values)
 
   }
 
