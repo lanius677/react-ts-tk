@@ -100,6 +100,7 @@ const Exception = () => {
   const usersInfo = useSelector((state: RootState) => state.users.infos)
   const dispatch = useAppDispatch()
   useEffect(() => {
+    console.log('signsInfo',signsInfo)
     if (_.isEmpty(signsInfo)) {
       dispatch(getTimeAction({ userid: usersInfo._id as string })).then(
         (action) => {
