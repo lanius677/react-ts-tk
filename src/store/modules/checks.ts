@@ -20,11 +20,12 @@ type GetApply = {
 
 type PostApply = {
   applicantid: string
-  applicantname: string,
-  approverid: string,
-  approvername: string,
-  note: string,
-  reason: [string, string],
+  applicantname: string
+  approverid: string
+  approvename: string
+  note: string
+  reason: string
+  time: Date | [string, string]
 }
 
 type PutApply = {
