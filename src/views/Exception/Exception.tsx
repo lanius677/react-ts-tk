@@ -7,6 +7,7 @@ import { RootState, useAppDispatch } from '@/store/index';
 import _ from 'lodash';
 import { Infos, getTimeAction, updateInfos } from '@/store/modules/signs';
 import { toZero } from '@/utils/common';
+import { getApplyAction, updateApplyList } from '@/store/modules/checks';
 
 
 const Exception = () => {
@@ -44,40 +45,23 @@ const Exception = () => {
   // }];
 
   // 审批的LineTime
-  const approvalLineItem = [{
-    color: 'blue',
-    children: (
-      <>
-        <h3>事假</h3>
-        <Card className={styles['exception-card']}>
-          <h4>待审批</h4>
-          <p className={styles['exception-content']}>
-            申请日期 xxxxxxx - xxxxxxx
-          </p>
-          <p className={styles['exception-content']}>
-            申请详情
-          </p>
-        </Card>
-      </>
-    )
-  },
-  {
-    color: 'blue',
-    children: (
-      <>
-        <h3>事假</h3>
-        <Card className={styles['exception-card']}>
-          <h4>待审批</h4>
-          <p className={styles['exception-content']}>
-            申请日期 xxxxxxx - xxxxxxx
-          </p>
-          <p className={styles['exception-content']}>
-            申请详情
-          </p>
-        </Card>
-      </>
-    )
-  }]
+  // const approvalLineItem = [{
+  //   color: 'blue',
+  //   children: (
+  //     <>
+  //       <h3>事假</h3>
+  //       <Card className={styles['exception-card']}>
+  //         <h4>待审批</h4>
+  //         <p className={styles['exception-content']}>
+  //           申请日期 xxxxxxx - xxxxxxx
+  //         </p>
+  //         <p className={styles['exception-content']}>
+  //           申请详情
+  //         </p>
+  //       </Card>
+  //     </>
+  //   )
+  // }]
 
   // 使用useSearchParams获取到GET传递过来的参数
   const [searchParams, setSearchParams] = useSearchParams()
@@ -98,9 +82,10 @@ const Exception = () => {
   // 初始数据获取
   const signsInfo = useSelector((state: RootState) => state.signs.infos)
   const usersInfo = useSelector((state: RootState) => state.users.infos)
+  const applyList = useSelector((state: RootState) => state.chceks.applyList)
   const dispatch = useAppDispatch()
   useEffect(() => {
-    console.log('signsInfo',signsInfo)
+    console.log('signsInfo', signsInfo)
     if (_.isEmpty(signsInfo)) {
       dispatch(getTimeAction({ userid: usersInfo._id as string })).then(
         (action) => {
@@ -112,6 +97,37 @@ const Exception = () => {
       )
     }
   }, [signsInfo, usersInfo, dispatch])
+
+  useEffect(() => {
+    if (_.isEmpty(applyList)) {
+      dispatch(getApplyAction({ applicantid: usersInfo._id as string })).then((action) => {
+        const { errcode, rets } = (action.payload as { [index: string]: unknown }).data as { [index: string]: unknown }
+        if (errcode === 0) {
+          // console.log('rets', rets)
+          dispatch(updateApplyList(rets as Infos[]))
+        }
+      })
+    }
+  }, [applyList, usersInfo, dispatch])
+
+  // 过滤审批applyList数据
+  const applyListMonth = applyList.filter((v) => {
+    // console.log('v',v)
+    const startTime = (v.time as string[])[0].split(' ')[0].split('-')
+    const endTime = (v.time as string[])[1].split(' ')[0].split('-')
+    console.log('startTime', startTime)
+    console.log('endTime', endTime)
+    // return startTime[1] <= toZero(month + 1) && endTime[1] >= toZero(month + 1)
+
+    if (startTime[1] <= toZero(month + 1) && endTime[1] >= toZero(month + 1)) {
+      return true
+    } else {
+      return false
+    }
+
+  })
+  // console.log('applyListMonth',applyListMonth)
+
 
 
 
@@ -126,12 +142,12 @@ const Exception = () => {
   }
   // console.log('details', details)
 
-  const renderTime=(date:string)=>{
-    const res =((signsInfo.time as {[index:string]:unknown})[toZero(month+1)] as {[index:string]:unknown})[date]
+  const renderTime = (date: string) => {
+    const res = ((signsInfo.time as { [index: string]: unknown })[toZero(month + 1)] as { [index: string]: unknown })[date]
 
-    if(Array.isArray(res)){
+    if (Array.isArray(res)) {
       return res.join('-')
-    }else{
+    } else {
       return '暂无打卡记录'
     }
   }
@@ -189,9 +205,37 @@ const Exception = () => {
         </Col>
 
         <Col span={12}>
-          {/* <Empty description="暂无申请审批" imageStyle={{ height: 200 }}></Empty> */}
-          <Timeline items={approvalLineItem}></Timeline>
-
+          {
+            applyListMonth.length
+              ?
+              <>
+                {
+                  applyListMonth.map((item) => {
+                    return <Timeline items={[
+                      {
+                        color: 'blue',
+                        children: (
+                          <>
+                            <h3>{item.reason as string}</h3>
+                            <Card className={styles['exception-card']}>
+                              <h4>{item.state as string}</h4>
+                              <p className={styles['exception-content']}>
+                                申请日期 {(item.time as string[])[0]} - {(item.time as string[])[1]}
+                              </p>
+                              <p className={styles['exception-content']}>
+                                申请详情 {item.note as string}
+                              </p>
+                            </Card>
+                          </>
+                        )
+                      }
+                    ]} key={item._id as string}></Timeline>
+                  })
+                }
+              </>
+              :
+              <Empty description="暂无申请审批" imageStyle={{ height: 200 }}></Empty>
+          }
         </Col>
       </Row>
     </div>
@@ -199,3 +243,4 @@ const Exception = () => {
 }
 
 export default Exception
+
