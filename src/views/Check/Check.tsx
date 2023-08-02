@@ -1,11 +1,12 @@
-import { Button, Divider, Input, Radio, RadioChangeEvent, Row, Space, Table } from 'antd';
+import { Button, Divider, Input, Radio, RadioChangeEvent, Row, Space, Table, message } from 'antd';
 import styles from './Check.module.scss';
-import { SearchOutlined } from '@ant-design/icons';
-import { ChangeEvent, useState } from 'react';
+import { CheckOutlined, CloseOutlined, SearchOutlined } from '@ant-design/icons';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/store';
+import { RootState, useAppDispatch } from '@/store';
 import { ColumnsType } from 'antd/es/table';
-import { Infos } from '@/store/modules/checks';
+import { Infos, getApplyAction, putApplyAction, updateCheckList } from '@/store/modules/checks';
+import _ from 'lodash';
 
 const Check = () => {
 
@@ -23,6 +24,8 @@ const Check = () => {
   const [searchWord, setSearchWord] = useState('')
 
   const checkList = useSelector((state: RootState) => state.chceks.checkList).filter((v) => (v.state === approverType || defalutApproverTypes === approverType) && (v.note as string).includes(searchWord))
+  const usersInfos = useSelector((state: RootState) => state.users.infos)
+
 
   // 搜索点击事件
   const searchWordChage = (ev: ChangeEvent<HTMLInputElement>) => {
@@ -33,6 +36,38 @@ const Check = () => {
   const approverTypeChange = (ev: RadioChangeEvent) => {
     setApproverTypes(ev.target.value)
   }
+
+  const dispatch = useAppDispatch()
+  useEffect(() => {
+    if (_.isEmpty(checkList)) {
+      dispatch(getApplyAction({ approverid: usersInfos._id as string })).then((action) => {
+        const { errcode, rets } = (action.payload as { [index: string]: unknown }).data as { [index: string]: unknown }
+        if (errcode === 0) {
+          // console.log('rets', rets)
+          dispatch(updateCheckList(rets as Infos[]))
+        }
+      })
+    }
+  }, [checkList, usersInfos, dispatch])
+
+  // handle操作方法
+  const handlePutApply=(_id:string,state:'已通过' | '未通过')=>{
+    dispatch(putApplyAction({_id,state})).then((action) => {
+      const { errcode } = (action.payload as { [index: string]: unknown }).data as { [index: string]: unknown }
+      if (errcode === 0) {
+        // console.log('rets', rets)
+       message.success('审批成功')
+
+       dispatch(getApplyAction({ approverid: usersInfos._id as string })).then((action) => {
+        const { errcode, rets } = (action.payload as { [index: string]: unknown }).data as { [index: string]: unknown }
+        if (errcode === 0) {
+          // console.log('rets', rets)
+          dispatch(updateCheckList(rets as Infos[]))
+        }
+      })
+      }
+    })
+  } 
 
     // 表头
     const columns: ColumnsType<Infos> = [
@@ -61,11 +96,18 @@ const Check = () => {
         key: 'note',
       },
       {
-        title: '审批人',
-        dataIndex: 'approvername',
-        key: 'approvername',
-        width: 180
-  
+        title: '操作',
+        dataIndex: 'handle',
+        key: 'handle',
+        width: 180,
+        render(_,record){
+          return (
+            <Space>
+              <Button type="primary" shape='circle' size='small' icon={<CheckOutlined />} onClick={()=>handlePutApply(record._id as string,'已通过')}></Button>
+              <Button type="primary" danger size='small' icon={<CloseOutlined />} onClick={()=>handlePutApply(record._id as string,'未通过')}></Button>
+            </Space>
+          )
+        }
       },
       {
         title: '状态',
