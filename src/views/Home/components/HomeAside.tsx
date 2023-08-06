@@ -18,7 +18,7 @@ const HomeAside = () => {
   const location=useLocation()
   const matchs=matchRoutes(routes,location)
 
-  console.log('matchs',matchs)
+  // console.log('matchs',matchs)
 
   const subPath=matchs![0].pathnameBase || ''
   const path=matchs![1].pathnameBase || ''

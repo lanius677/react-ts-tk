@@ -12,6 +12,10 @@ const Check = lazy(() => import('@/views/Check/Check'))
 const Apply = lazy(() => import('@/views/Apply/Apply'))
 const Login = lazy(() => import('@/views/Login/Login'))
 const Exception = lazy(() => import('@/views/Exception/Exception'))
+const NotAuth=lazy(()=>import('@/views/NotAuth/NotAuth'))
+const NotFound=lazy(()=>import('@/views/NotFound/NotFound'))
+const NotServer=lazy(()=>import('@/views/NotServer/NotServer'))
+
 // 全局路由守卫
 const BeforeEach = lazy(() => import('@/components/BeforeEach/BeforeEach'))
 
@@ -107,6 +111,23 @@ const routes: RouteObject[] = [
     element: createElement(BeforeEach, null, createElement(Login)),
 
   },
+
+  {
+    path:'/403',
+    element:createElement(NotAuth)
+  },
+  {
+    path:'/404',
+    element:createElement(NotFound)
+  },
+  {
+    path:'/500',
+    element:createElement(NotServer)
+  },
+  {
+    path:'*',
+    element:createElement(Navigate,{to:'/404'})
+  }
 ]
 
 const router = createBrowserRouter(routes)

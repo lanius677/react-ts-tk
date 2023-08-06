@@ -21,10 +21,13 @@ const BeforeEach = (props: BeforeEachProps) => {
 
   const location = useLocation()
   const matchs = matchRoutes(routes, location)
+
+
   // console.log(matchs)
   if (Array.isArray(matchs)) {
 
     const meta = matchs[matchs.length - 1].route.meta
+    const name = matchs[matchs.length - 1].route.name
     if (meta?.auth && _.isEmpty(infos)) {
 
       if (token) {
@@ -39,8 +42,13 @@ const BeforeEach = (props: BeforeEachProps) => {
       } else {
         return <Navigate to='/login'></Navigate>
       }
+    }
 
-
+    // 判断用户权限是否跳转403
+    console.log('infos.permission',infos.permission)
+    console.log('name',name)
+   if(Array.isArray(infos.permission) && (!infos.permission.includes(name)) && !name){
+      return <Navigate to='/403'></Navigate>
     }
   }
   if (token && location.pathname === '/login') {

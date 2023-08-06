@@ -47,7 +47,7 @@ const postApplyAction = createAsyncThunk('checks/postApplyAction', async (payloa
 
 // 修改用户审批信息
 const putApplyAction = createAsyncThunk('checks/putApplyAction', async (payload: PutApply) => {
-  const ret = await http.put('/checks/apply', payload)
+  const ret = await http.put('/checks/apply',payload)
   return ret
 })
 

@@ -59,6 +59,7 @@ const usersSlice = createSlice({
     //销毁Infos
     clearToken(state) {
       state.token=''
+      state.infos={}
      }
 
   }

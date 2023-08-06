@@ -3,6 +3,7 @@ import type { AxiosRequestConfig, AxiosResponse } from 'axios'
 import store from '@/store';
 import {clearToken} from '@/store/modules/users';
 import { message } from 'antd';
+import { router } from '@/router';
 
 const instance = axios.create({
   baseURL: 'http://api.h5ke.top/',
@@ -26,8 +27,10 @@ instance.interceptors.response.use(function (response) {
     setTimeout(()=>{
       window.location.replace('/login')
     },1000)
+    // 判断是否跳转到500页面
+  }else if(response.data.errmsg==='error'){
+    router.navigate('/500')
   }
-
   return response;
 }, function (error) {
   return Promise.reject(error);
