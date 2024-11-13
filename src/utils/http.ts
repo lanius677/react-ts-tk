@@ -6,7 +6,7 @@ import { message } from 'antd';
 import { router } from '@/router';
 
 const instance = axios.create({
-  baseURL: 'http://api.h5ke.top/',
+  baseURL: 'http://127.0.0.1:3000/',
   timeout: 10000
 });
 
